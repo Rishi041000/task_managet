@@ -1,0 +1,25 @@
+<div style="display: flex;justify-content: center ">
+  <form [formGroup]="loginForm" style="padding-top:100px" (ngSubmit)="login()">
+    <div style="padding-bottom:20px">
+      <label><b>Mail ID* :</b></label>
+      <small class="error" *ngIf="!loginForm.get('mailID').valid && loginForm.get('mailID').touched">
+        *required field.
+      </small>
+      <br />
+      <input type="text" style="width:400px" formControlName="mailID" />
+    </div>
+    <div style="padding-bottom:20px">
+      <label><b>Password* :</b></label>
+      <small class="error" *ngIf="!loginForm.get('password').valid && loginForm.get('password').touched">
+        *required field.
+      </small>
+      <br />
+      <input type="password" style="width:400px" formControlName="password" />
+    </div>
+    <input class="btn btn-secondary" type="submit" style="text-align:center" value="Login" />
+    <small style="color:red" class="error">
+      {{errorText}}
+    </small>
+
+  </form>
+</div>

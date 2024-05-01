@@ -1,0 +1,23 @@
+.error {
+  padding-left: 10px;
+  color: red
+}
+.container {
+  overflow: scroll;
+  height: 500px;
+  width: 1500px;
+}
+
+
+  table th,
+  table td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  table thead {
+    position: sticky;
+    inset-block-start: 0;
+    background-color:white
+  }

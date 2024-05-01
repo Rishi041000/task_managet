@@ -1,0 +1,131 @@
+<p *ngIf="!tasks"><em>Loading...</em></p>
+
+<!--div for list of tasks-->
+<div *ngIf="tasksEnable">
+  <div style="width: 100%; overflow: hidden; ">
+    <div style="width: 900px; float: left;">
+      <button style="margin-right: 20px;" class="btn btn-secondary" (click)="refresh()">Refresh</button>
+      <button style="margin-right: 20px;" class="btn btn-primary" (click)="search('id')">Search</button>
+      <select [(ngModel)]="option" (change)="onSearchChange()">
+        <option *ngFor="let option of options" [value]="option">{{option}}</option>
+      </select>  :
+      <input type="text" placeholder="enter" [(ngModel)]="title" *ngIf="titleEnabled " />
+      <input type="number" [(ngModel)]="number" *ngIf="numberEnabled" />
+      <select [(ngModel)]="priority" *ngIf="priorityEnabled">
+        <option *ngFor="let priority of priorityies" [value]="priority">{{priority}}</option>
+      </select>
+      <select [(ngModel)]="status" *ngIf="statusEnabled">
+        <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+      </select>
+      <label style="margin-left:15px" *ngIf="dateEnabled">From :</label>
+      <input type="datetime-local" [(ngModel)]="DtaeFrom" *ngIf="dateEnabled" />
+      <label style="margin-left:15px" *ngIf="dateEnabled"> To :</label>
+      <input type="datetime-local" [(ngModel)]="DateTo" *ngIf="dateEnabled" />
+
+    </div>
+    <div style="margin-left: 380px; padding-right:50px; text-align:right">
+      <button class="btn btn-primary" (click)="create()">Create</button>
+      <button style="margin-left: 30px;" class="btn">
+
+        {{notificationsCount}}
+      </button>
+    </div>
+  </div>
+  <div class="container">
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="tasks">
+      <thead>
+        <tr>
+          <th ><button class="btn" (click)="search('id')"><b>Number</b></button></th>
+          <th><button class="btn" (click)="search('title')"><b>Title</b></button></th>
+          <th><button class="btn" (click)="search('priority')"><b>Priority</b></button></th>
+          <th><button class="btn" (click)="search('status')"><b>Status</b></button></th>
+          <th><button class="btn" (click)="search('createdDate')"><b>created</b></button></th>
+          <th><button class="btn" ><b>Modified</b></button></th>
+          <th><button class="btn" (click)="search('dueDate')"><b>Due</b></button></th>
+          <th><button class="btn"><b>Actions</b></button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td style="align-items:center; align-content:center" >{{ task.id }}</td>
+          <td>{{ task.title }}</td>
+          <td>{{ task.priority }}</td>
+          <td>{{ task.status }}</td>
+          <td>{{ task.createdDate |date:'short' }}</td>
+          <td>{{ task.modifiedDate |date:'short' }}</td>
+          <td>{{ task.dueDate |date:'short' }}</td>
+          <td>
+            <button class="btn btn-secondary" style="margin-right:30px" (click)="editTask(task.id)">Edit</button>
+            <button class="btn btn-danger" (click)="deleteTask(task.id)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
+
+<!--div for update task-->
+<div *ngIf="createEnabled">
+  <h2> {{buttonText}} Task</h2>
+  <div *ngIf="updateEnabled">
+    <span>Task number:      {{taskForm.value['id']}}</span><br />
+    <span>Created on:       {{taskForm.value['createdDate'] |date:'medium'}}</span><br />
+    <span>Last modified on:{{taskForm.value['modifiedDate'] |date:'medium'}}</span><br />
+  </div>
+  <form class="form" style="padding-top:10px" [formGroup]="taskForm" (ngSubmit)="OnSubmitted()">
+
+    <!--<div style="padding-bottom:20px">
+    <label>ID:</label>
+    <small class="error" *ngIf="!taskForm.get('id').valid && taskForm.get('id').touched">
+      *required field.
+    </small>
+    <br />
+    <input type="text" style="width:400px" formControlName="id" />
+  </div>-->
+
+    <div style="padding-bottom:20px">
+      <label><b>Title* :</b></label>
+      <small class="error" *ngIf="!taskForm.get('title').valid && taskForm.get('title').touched ">
+    *required field and length should be less that 40
+  </small>
+      <br />
+      <input type="text" style="width:400px" formControlName="title" />
+    </div>
+    <div style="padding-bottom:20px">
+      <label><b>Description* :</b></label>
+      <small class="error" *ngIf="!taskForm.get('description').valid && taskForm.get('description').touched">
+        *required field.
+      </small>
+      <br />
+      <textarea style="width:400px;height:150px" formControlName="description"></textarea>
+    </div>
+    <div style="padding-bottom:20px">
+      <label style="padding-right:42px"><b>Status* :</b></label>
+      <select formControlName="status">
+        <option *ngFor="let status of statuses" [value]="status">{{status}}</option>
+      </select>
+    </div>
+    <div style="padding-bottom:20px">
+      <label style="padding-right: 34px"><b>Priority* :</b></label>
+      <select formControlName="priority">
+        <option *ngFor="let priority of priorityies" [value]="priority">{{priority}}</option>
+      </select>
+    </div>
+    <div style="padding-bottom:20px">
+      <label style="padding-right: 20px"><b> Due date* :</b></label>
+      <input type="datetime-local" formControlName="dueDate" />
+      <small class="error" *ngIf="!taskForm.get('dueDate').valid && taskForm.get('dueDate').touched">
+        *required field.
+      </small>
+    </div>
+    <input style="margin-right:30px" class="btn btn-secondary" type="submit" />
+    <button style="padding-left:20px" class="btn btn-danger" (click)="cancle()">Cancle</button><br />
+                                                                                               <small class="error">
+                                                                                                 {{errorText}}
+                                                                                               </small>
+
+  </form>
+</div>
+
